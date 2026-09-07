@@ -2,9 +2,9 @@
 
 **Class** is a user-defined data-type that acts as skeleton of an object. It binds data variables i.e. attributes and functions i.e. methods into a single unit to represent any object. 
 Mathematically, class C is a structure that is an ordered pair of sets.
-$$
+```math
 C = (S, M)
-$$
+```
 **State Space($S$):** It is defined as the set of all possible attributes of an object. More precisely it is **Cartesian Product** of the attributes of an object.
 $$
 S = A_{1} \times A_{2} \times \dots \times A_{n}
