@@ -6,18 +6,18 @@ Mathematically, class C is a structure that is an ordered pair of sets.
 C = (S, M)
 ```
 **State Space($S$):** It is defined as the set of all possible attributes of an object. More precisely it is **Cartesian Product** of the attributes of an object.
-$$
+```math
 S = A_{1} \times A_{2} \times \dots \times A_{n}
-$$
+```
 **Methods($M$):** Set of operations that act upon the state space. $\forall m \in M \exists$ a mapping to the class's current state and arguments(optional) to the new state and/or the output,
-$$
+```math
 m:S \times Arg_{1}\times Arg_{2} \times \dots \times Arg_{n}\rightarrow S \times M
-$$
+```
 
 **Objects(o):** Objects is nothing but element of the state space.
-$$
+```math
 o \in S
-$$
+```
 
 ### Why Class, why not struct
 For this, one needs to know **Class Invariant**. Class Invariant is a condition that remains true for an object throughout its lifetime. If any object defies this rule, the object enters an invalid state, leading to crashes or undefined behaviour. In c-style struct there is no such invariant rule and this can lead to code failure in bigger projects. Implicitly, c-style struct makes the defined attributes public. 
