@@ -4,9 +4,9 @@
 Mathematically, class C is a structure that is an ordered pair of sets.
 $$C = (S, M)$$
 **State Space($S$):** It is defined as the set of all possible attributes of an object. More precisely it is **Cartesian Product** of the attributes of an object.
-$$S = A_{1} \times A_{2} \times \dot \dot \dot \times A_{n}$$
+$$S = A_{1} \times A_{2} \times \cdots \times A_{n}$$
 **Methods($M$):** Set of operations that act upon the state space. $\forall m \in M \exists$ a mapping to the class's current state and arguments(optional) to the new state and/or the output,
-$$m:S \times Arg_{1}\times Arg_{2} \times \dot \dot \dot \times Arg_{n}\rightarrow S*M$$
+$$m:S \times Arg_{1}\times Arg_{2} \times \cdots \times Arg_{n}\rightarrow S*M$$
 
 **Objects(o):** Objects is nothing but element of the state space.
 $$o \in S$$
