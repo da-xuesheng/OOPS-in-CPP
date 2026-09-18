@@ -45,7 +45,7 @@ When the compiler given instruction to create an object, the OS first reserves b
 
 But one might think why can't the constructor be altered(because it's usually defined public).
 ##### Why Constructor can't be altered
-Constructors are not like the attributes of an objects, the variables are stored in RAM while the constructors are stored in .text segment of executable memory whicg is only read-only, hence they're only Read-Only. If altering is attempted, it'll cause the OS to crash the program, **Segmentation Fault**. In a more eaiser manner, an object's memory only contains its member variables, the constructor isn't stored here, thus constructor can't be accessed.
+Constructors are not like the attributes of an objects, the variables are stored in RAM while the constructors are stored in .text segment of executable memory which is only read-only. If altering is attempted, it'll cause the OS to crash the program, **Segmentation Fault**. In a more eaiser manner, an object's memory only contains its member variables, the constructor isn't stored here, thus constructor can't be accessed.
 ```cpp
 class threeDobj{
 	int width;
@@ -101,3 +101,116 @@ This gives undefined results, if the garbage values are positive, the object wil
 Let's move on to member function.
 
 ### Member Functions
+Function that belong to a class type are called member function, otherwise they are called non-member function or free function. Member functions to be called member function, must be declared inside class, but it can be defined outside also. 
+```cpp
+class Student{
+	int roll;
+	string name;
+
+	bool validStudent(){
+		if(roll>=1 && roll<=96){
+			return 1;
+		}
+		return 0;
+	}
+public:
+	Student(int r, string n){
+		if(!validStudent()){
+			perror("Student not valid");
+			exit(EXIT_FAILURE);
+		}
+		roll=r;
+		name=n;
+	}
+	void checkSection(){
+		if(roll>=1 && roll<=30){
+			cout<<"section: A1"<<endl;
+		}else if(roll>=31 && roll <=61){
+			cout<<"section: A2"<<endl;
+		}else{
+			cout<<"section: A3"<<endl;
+		}
+	}
+	void printStudentInfo(){
+		cout<<roll<<" "<<name<<endl;
+	}
+};
+
+int main(){
+	Student s(54, "AdStacy");
+	s.printStudentInfo();
+	return 0;
+}
+```
+This is an example to show writing member functions.
+##### Implicit Object
+An Implicit Object is an object that is created or used by the compiler without the coder to write it.
+Take the previous example:
+```cpp
+Student s(54, "AdStacy");
+s.printStudentInfo();
+```
+It may seem that printStduentInfo() has no arguments, but this is mathematically incorrect. This mathematically interprets that:
+```math
+printStudentInfo:\Phi_E \rightarrow output
+```
+But this can't happen, so this means that there is some argument that is passed **Implicitly** by the compiler. The function has to know which object's state space to print.
+```cpp
+printStudentInfo(s);
+```
+it is the actual fucntion argument that is happenning. 
+Implicit object is the object on which a non-static member function is invoked.
+##### Non-Static and Static Member Fucntions
+Non-static member functions are those member function that does not have **static** keyword. These are those member functions that are associated with object's state space. 
+```math
+f:S \times Arguments \rightarrow Output
+```
+This is the mathematical defenition of Non-static function.
+
+Static member functions are those member function that does have **static** keyword. These functions are not associated with object's state space.
+```math
+f:Arguments \rightarrow Output
+```
+Mathematically we can define the Static functions in this way.
+##### Why Non-static gets associated with object's state space?
+```cpp
+Student s(54, "AdStacy");
+s.printStudentInfo();
+```
+Here memory for the object s is allocated and it only contains the data members not copy of the printStudentInfo() function. The function's compiled machine code stays in the program's text segment. It is not in the stack, only the object's data members are in the stack. Hence for Multiple objects there is only one copy of the function.
+Now when **Object.function()** is written, the Object is implicit object of the member function call. For this call **this** pointer points to Object, hence, inside printStudentInfo(), roll and name refers to roll belonging to s, representes by:
+```cpp
+this->roll;
+this->name;
+```
+CPU loads 0x1000 into a dedicated register and jumps to the text segment where the function exists. Inside function() accessing member variables resolves:
+```math
+Address of member = Register(this) + Offset of member
+```
+Hence a non-static function associates with the object's state space only at the time of execution by binding this to the address of the object.
+**What is Offset?**
+It is the number of bytes from a starting base address to a specific location within a contiguous block of memory.
+###### Member Variable and Functions declarations can be done in any order.
+This is possible because compilation happens in 2 passes. In first pass the compiler records all member names, types, then it parses the code inside function bodies and as the first pass is completed hence all the variables are known.
+```cpp
+class Stu{
+public:
+	int x;
+	int f(){
+		y-=x;
+	}
+private:
+	int y=10;
+};
+```
+Although the variable y is defined below the function still it will compile and execute due to the 2 passes.
+But we can't do this for Constructor Initialization List.
+```cpp
+class X {
+    int a;
+    int b;
+public:
+    X(int val) : b(val), a(b + 5) {} 
+};
+```
+This will throw error not during compile-time but during run-time. It'll compile as the 2 pass method but during run-time compiler ignores your written sequence, generates machine code that executes in declaration order. As b is undeclared so a gets some garbage value.
