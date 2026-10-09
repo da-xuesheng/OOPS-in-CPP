@@ -214,3 +214,52 @@ public:
 };
 ```
 This will throw error not during compile-time but during run-time. It'll compile as the 2 pass method but during run-time compiler ignores your written sequence, generates machine code that executes in declaration order. As b is undeclared so a gets some garbage value.
+
+**Differrence of Class Obj(arguments), Class(arguments)**
+class obj(arg) is a named object, but class(args) is an explicit unnamed temporary object.
+**Differrence of {} and () while object creation**
+```cpp
+class S{
+	int x;
+	int y;
+public:
+	S(int m, int n):x(m), y(n){
+	}
+};
+```
+
+It is known that temporary object of S can be created by S(1, 2) and S{1, 2} both ways. The differrence between them is that S{1, 2} does **List Initialization** and S(1, 2) does **direct initialization**.
+
+To understand the following, one must know **Narrowing-conversion prevention**.
+###### Narrowing-conversion prevention
+A conversion is considered narrowing if the destination type cannot represent all possible values of the source type.
+e.g. float-to-int, double-float, int-to-char, signed-to-unsigned
+Usual initialization syntax like = or () permits narrowing but {} initialization prevents this and gives compile-time error.
+```cpp
+int a=3.14;
+int b{3.14}; //this will give error
+
+int x=1000;
+char c1=x; //it will not give error
+char c2{x}; //this will return error
+```
+{} initialization permits conversion from an integer type to a smaller integer type only if the source is a constant expression and the specific value fits in the target type without truncation. 
+In the same manner, S(1, 2) and S{1, 2} will get initialized. 
+Only writing S{} will create a temporary object using value-initializations. Writing S() will work the same, they have nothing much differrent. 
+```cpp
+int main(){
+	S s1{};
+	S s();
+}
+```
+S s1{} will create a object named s1 of S type but S s() will not create any object, it is simply a function declaration whose return type is S and has no arguments. Thus best practice of creating object is using the curly-braces {}.
+If S(1) or S{1} is written then an temporary object with argument 1 is created(given that S(int) constructor is defined).
+But this only happens for literals, if it is done with some variable which is of same type as S then it gives error.
+```cpp
+int main(){
+	S s2;
+	S(s2);
+}
+```
+The compiler sees S s2 and S(s2) as same which means it also sees it as redeclaration, thus gives error. 
+But if we write S{s2} then it will create a temporary object and will not give error. 
